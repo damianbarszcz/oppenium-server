@@ -6,11 +6,11 @@ type Product struct {
 	gorm.Model
 
 	Id            uint   `json:"id"`
-	Availability  bool   `json:"availability"`
-	Product_price uint   `json:"product_price"`
+	Product_title string `json:"product_title"`
+	Product_price int64  `json:"product_price"`
+	Product_image string `json:"product_image"`
 	Description   string `json:"description"`
 	Category      string `json:"category"`
-	Product_image string `json:"product_image"`
-	Product_title string `json:"product_title"`
+	Availability  bool   `json:"availability"`
 	Product_url   string `json:"product_url"`
 }

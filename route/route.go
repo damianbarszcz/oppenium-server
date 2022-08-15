@@ -24,11 +24,12 @@ func Init(g *echo.Group) {
 
 	g.POST("/user/register", controllers.UserRegister)
 	g.POST("/user/login", controllers.UserLogin)
-	g.GET("/user/data", controllers.GetUser)
+	g.GET("/user/account", controllers.GetUser)
 	g.POST("/user/logout", controllers.GetLogout)
 
-	g.POST("/cart/:id/add-cart/:product-id", controllers.AddProductToCart)
-	g.GET("/cart/:id/products", controllers.GetShoppingCart)
+	g.POST("/cart/:user_id/add-cart", controllers.AddProductToCart)
+	g.GET("/cart/:user_id/products", controllers.GetShoppingCart)
 
-	g.GET("/order/make-peyment/:id", controllers.MakePayment)
+	g.GET("/order/:user_id/make-peyment", controllers.MakePayment)
+	g.GET("/order/:user_id/products", controllers.GetProductsOrder)
 }

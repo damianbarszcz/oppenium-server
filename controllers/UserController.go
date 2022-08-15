@@ -4,6 +4,7 @@ import (
 	"go-server/models"
 	"go-server/models/dto"
 	"net/http"
+	"os"
 
 	"strconv"
 	"time"
@@ -12,8 +13,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
-
-const SecretKey = "secret"
 
 func UserRegister(c echo.Context) error {
 
@@ -60,7 +59,7 @@ func UserRegister(c echo.Context) error {
 
 	Db.Create(&user_data_register)
 
-	return c.JSON(http.StatusCreated, "The user was created.")
+	return c.JSON(http.StatusCreated, "The user was created. Now you can log in.")
 }
 
 func UserLogin(c echo.Context) error {
@@ -88,7 +87,7 @@ func UserLogin(c echo.Context) error {
 
 	})
 
-	token, err := claims.SignedString([]byte(SecretKey))
+	token, err := claims.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
 	if err != nil {
 		return err
@@ -101,7 +100,7 @@ func UserLogin(c echo.Context) error {
 
 	c.SetCookie(cookie)
 
-	return c.String(http.StatusOK, token)
+	return c.JSON(http.StatusOK, token)
 }
 
 func GetUser(c echo.Context) error {
@@ -112,7 +111,7 @@ func GetUser(c echo.Context) error {
 	}
 
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
+		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
 
 	if err != nil {
