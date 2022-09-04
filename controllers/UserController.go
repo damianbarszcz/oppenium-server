@@ -43,23 +43,23 @@ func UserRegister(c echo.Context) error {
 		return c.JSON(http.StatusConflict, "The user with this email already exists.")
 	}
 
-	USER_REGISTER := models.User{
+	userRegister := models.User{
 		Email:    u.Email,
 		Password: string(hashPassword),
 	}
 
-	Db.Create(&USER_REGISTER)
+	Db.Create(&userRegister)
 
 	Db.Where(EMAIL, u.Email).First(&user)
 
-	USER_DATA_REGISTER := models.UserData{
+	userDataRegister := models.UserData{
 		User_id:      user.Id,
 		First_name:   ud.First_name,
 		Last_name:    ud.Last_name,
 		Phone_number: ud.Phone_number,
 	}
 
-	Db.Create(&USER_DATA_REGISTER)
+	Db.Create(&userDataRegister)
 
 	return c.JSON(http.StatusCreated, "The user was created. Now you can log in.")
 }
