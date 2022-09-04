@@ -12,6 +12,8 @@ import (
 	"github.com/stripe/stripe-go/v72/checkout/session"
 )
 
+const USER_ID = "user_id = ?"
+
 func makeOrderId(n int) string {
 	var chars = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321")
 	str := make([]rune, n)
@@ -26,7 +28,7 @@ func MakePayment(c echo.Context) error {
 
 	var cart []models.Cart
 
-	Db.Where("user_id = ?", user_id).Find(&cart)
+	Db.Where(USER_ID, user_id).Find(&cart)
 
 	params := &stripe.CheckoutSessionParams{
 		Mode: stripe.String(string(stripe.CheckoutSessionModePayment)),
@@ -81,7 +83,7 @@ func MakePayment(c echo.Context) error {
 		Db.Create(&order)
 	}
 
-	Db.Where("user_id = ?", user_id).Delete(&cart)
+	Db.Where(USER_ID, user_id).Delete(&cart)
 
 	return c.JSON(http.StatusOK, s)
 }
@@ -91,7 +93,7 @@ func GetProductsOrder(c echo.Context) error {
 
 	var order []models.Order
 
-	Db.Where("user_id = ?", user_id).Find(&order)
+	Db.Where(USER_ID, user_id).Find(&order)
 
 	return c.JSON(http.StatusCreated, order)
 }
