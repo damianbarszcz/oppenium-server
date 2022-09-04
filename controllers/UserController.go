@@ -14,6 +14,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const EMAIL = "email = ?"
+
 func UserRegister(c echo.Context) error {
 
 	var u = dto.UserDTO{
@@ -35,29 +37,29 @@ func UserRegister(c echo.Context) error {
 
 	var user models.User
 
-	Db.Where("email = ?", u.Email).First(&user)
+	Db.Where(EMAIL, u.Email).First(&user)
 
 	if user.Id > 0 {
 		return c.JSON(http.StatusConflict, "The user with this email already exists.")
 	}
 
-	user_register := models.User{
+	USER_REGISTER := models.User{
 		Email:    u.Email,
 		Password: string(hashPassword),
 	}
 
-	Db.Create(&user_register)
+	Db.Create(&USER_REGISTER)
 
-	Db.Where("email = ?", u.Email).First(&user)
+	Db.Where(EMAIL, u.Email).First(&user)
 
-	user_data_register := models.UserData{
+	USER_DATA_REGISTER := models.UserData{
 		User_id:      user.Id,
 		First_name:   ud.First_name,
 		Last_name:    ud.Last_name,
 		Phone_number: ud.Phone_number,
 	}
 
-	Db.Create(&user_data_register)
+	Db.Create(&USER_DATA_REGISTER)
 
 	return c.JSON(http.StatusCreated, "The user was created. Now you can log in.")
 }
@@ -71,7 +73,7 @@ func UserLogin(c echo.Context) error {
 
 	var user models.User
 
-	Db.Where("email = ?", u.Email).First(&user)
+	Db.Where(EMAIL, u.Email).First(&user)
 
 	if user.Id == 0 {
 		return c.JSON(http.StatusUnauthorized, "Incorrect email address or password.")
