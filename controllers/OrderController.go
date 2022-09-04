@@ -24,11 +24,11 @@ func makeOrderId(n int) string {
 }
 
 func MakePayment(c echo.Context) error {
-	user_id := c.Param("user_id")
+	userId := c.Param("user_id")
 
 	var cart []models.Cart
 
-	Db.Where(USER_ID, user_id).Find(&cart)
+	Db.Where(USER_ID, userId).Find(&cart)
 
 	params := &stripe.CheckoutSessionParams{
 		Mode: stripe.String(string(stripe.CheckoutSessionModePayment)),
@@ -83,17 +83,17 @@ func MakePayment(c echo.Context) error {
 		Db.Create(&order)
 	}
 
-	Db.Where(USER_ID, user_id).Delete(&cart)
+	Db.Where(USER_ID, userId).Delete(&cart)
 
 	return c.JSON(http.StatusOK, s)
 }
 
 func GetProductsOrder(c echo.Context) error {
-	user_id := c.Param("user_id")
+	userId := c.Param("user_id")
 
 	var order []models.Order
 
-	Db.Where(USER_ID, user_id).Find(&order)
+	Db.Where(USER_ID, userId).Find(&order)
 
 	return c.JSON(http.StatusCreated, order)
 }
